@@ -9,7 +9,7 @@ import (
 )
 
 const totalPoints = 100
-const pointsPerQuestion = 20
+const pointsPerQuestion = 100
 
 var id uint64 = 1
 
@@ -36,7 +36,7 @@ func main() {
 			users = append(users, u)
 		case "2":
 			for _, u := range users {
-				fmt.Printf("Id: %v Name: %s Time: %v",
+				fmt.Printf("Id: %v Name: %s Time: %v\n",
 					u.Id, u.Name, u.Time)
 			}
 		case "3":

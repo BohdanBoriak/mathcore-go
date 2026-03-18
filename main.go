@@ -1,9 +1,13 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
 	"math/rand"
 	"mathcore-go/domain"
+	"os"
+	"sort"
 	"strconv"
 	"time"
 )
@@ -89,4 +93,34 @@ func play() domain.User {
 	id++
 
 	return user
+}
+
+func sortAndSave(users []domain.User) {
+	sort.SliceStable(users, func(i, j int) bool {
+		return users[i].Time < users[j].Time
+	})
+
+	file, err := os.OpenFile(
+		"users.json",
+		os.O_RDWR|os.O_CREATE|os.O_TRUNC,
+		0755,
+	)
+	if err != nil {
+		log.Printf("sortAndSave(os.OpenFile): %s", err)
+		return
+	}
+
+	defer func() {
+		err = file.Close()
+		if err != nil {
+			log.Printf("sortAndSave(file.Close): %s", err)
+		}
+	}()
+
+	encoder := json.NewEncoder(file)
+	err = encoder.Encode(users)
+	if err != nil {
+		log.Printf("sortAndSave(encoder.Encode): %s", err)
+		return
+	}
 }

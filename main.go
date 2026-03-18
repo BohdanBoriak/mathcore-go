@@ -38,6 +38,7 @@ func main() {
 		case "1":
 			u := play()
 			users = append(users, u)
+			sortAndSave(users)
 		case "2":
 			for _, u := range users {
 				fmt.Printf("Id: %v Name: %s Time: %v\n",
@@ -123,4 +124,8 @@ func sortAndSave(users []domain.User) {
 		log.Printf("sortAndSave(encoder.Encode): %s", err)
 		return
 	}
+}
+
+func getUsers() []domain.User {
+
 }

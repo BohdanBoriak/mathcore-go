@@ -26,8 +26,6 @@ func menu() {
 func main() {
 	fmt.Println("Вітаю у грі MathCore \\m/")
 
-	var users []domain.User
-
 	for {
 		menu()
 
@@ -37,9 +35,11 @@ func main() {
 		switch choice {
 		case "1":
 			u := play()
+			users := getUsers()
 			users = append(users, u)
 			sortAndSave(users)
 		case "2":
+			users := getUsers()
 			for _, u := range users {
 				fmt.Printf("Id: %v Name: %s Time: %v\n",
 					u.Id, u.Name, u.Time)
@@ -127,5 +127,27 @@ func sortAndSave(users []domain.User) {
 }
 
 func getUsers() []domain.User {
+	var users []domain.User
 
+	file, err := os.Open("users.json")
+	if err != nil {
+		log.Printf("getUsers(file.Open) %s", err)
+		return nil
+	}
+
+	defer func() {
+		err = file.Close()
+		if err != nil {
+			log.Printf("getUser(file.Close) %s", err)
+		}
+	}()
+
+	decoder := json.NewDecoder(file)
+	err = decoder.Decode(&users)
+	if err != nil {
+		log.Printf("getUsers(decoder.Decode) %s", err)
+		return nil
+	}
+
+	return users
 }
